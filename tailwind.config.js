@@ -14,6 +14,7 @@ module.exports = {
             },
             colors: {
                 'off-white': '#F2EFE6',
+                white: 'white',
             },
             aspectRatio: {
                 '3/4': '3/4',
@@ -45,10 +46,21 @@ module.exports = {
                         transform: 'translateY(0)',
                     },
                 },
+                'off-white-to-white': {
+                    '0%': { backgroundColor: theme('colors.off-white') },
+                    '100%': { backgroundColor: theme('colors.white') },
+                },
+                fadein: {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                },
             }),
             animation: {
                 'slide-to-top':
-                    'slide-to-top 2s cubic-bezier(0.76, 0, 0.24, 1) 1s 1 normal both',
+                    'slide-to-top 2s cubic-bezier(0.76, 0, 0.24, 1) 500ms 1 normal both',
+                'off-white-to-white':
+                    'off-white-to-white 0s linear 0s 1 normal forwards;',
+                fadein: 'fadein 1s linear 0s 1 normal both',
             },
         },
         fontFamily: {

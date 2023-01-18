@@ -1,9 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Image } from './Components/Image'
 
 function App() {
     const [galleryImagesPaths, setGalleryImagesPaths] = useState([])
     const [isGalleryLoading, setIsGalleryLoading] = useState(true)
+    const gallerySide = useRef(null)
+    const page = useRef(null)
+    const lastAnimatedWord = useRef(null)
+    const awwwards = useRef(null)
+    const aboutUs = useRef(null)
+    const [isWebPageTitleAnimationPlayed, setIsWebPageTitleAnimationPlayed] =
+        useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -12,7 +19,6 @@ function App() {
             )
             return data.json()
         }
-        console.log(process.env.REACT_APP_BACKEND_URL)
 
         setIsGalleryLoading(true)
         fetchData()
@@ -24,6 +30,18 @@ function App() {
                 setIsGalleryLoading(false)
             })
     }, [])
+
+    useEffect(() => {}, [isWebPageTitleAnimationPlayed])
+
+    function onAnimationEnd(e) {
+        if (e.target === lastAnimatedWord.current) {
+            gallerySide.current.classList.remove('hidden')
+            gallerySide.current.classList.add('animate-fadein')
+            awwwards.current.classList.add('animate-fadein')
+            aboutUs.current.classList.add('animate-fadein')
+            page.current.classList.add('animate-off-white-to-white')
+        }
+    }
     return (
         <div className="bg-off-white">
             <header className="fixed px-[2vw] py-[1.875rem] w-full">
@@ -54,41 +72,77 @@ function App() {
                     </svg>
                 </a>
             </header>
-            <div className="grid grid-cols-2 h-screen gap-[2.125rem] bg-white">
+            {/* page content wrapper */}
+            <div
+                ref={page}
+                className="grid grid-cols-2 h-screen gap-[2.125rem]"
+            >
+                {/* gallery side */}
                 {!isGalleryLoading && (
-                    <div className="grid grid-cols-2 overflow-scroll no-scrollbar gap-[2.125rem]">
-                        <div className="flex flex-col gap-[2.125rem]">
-                            {galleryImagesPaths
-                                .filter((_, idx) => idx < 9)
-                                .map(({ url }, idx) => {
-                                    return (
-                                        <a href={url} className="aspect-[3/4]">
-                                            <Image {...{ url, alt: idx + 1 }} />
-                                        </a>
-                                    )
-                                })}
-                        </div>
-                        <div className="flex flex-col gap-[2.125rem]">
-                            {galleryImagesPaths
-                                .filter((_, idx) => idx > 8)
-                                .map(({ url }, idx) => {
-                                    return (
-                                        <a href={url} className="aspect-[2/3]">
-                                            <Image {...{ url, alt: idx + 1 }} />
-                                        </a>
-                                    )
-                                })}
+                    <div className="overflow-scroll no-scrollbar">
+                        <div
+                            ref={gallerySide}
+                            className="hidden overflow-hidden"
+                        >
+                            <div className="grid grid-cols-2 gap-[2.125rem] ">
+                                <div className="flex flex-col gap-[2.125rem]">
+                                    {galleryImagesPaths
+                                        .filter((_, idx) => idx < 9)
+                                        .map(({ url }, idx) => {
+                                            return (
+                                                <a
+                                                    href={url}
+                                                    className="aspect-[3/4]"
+                                                >
+                                                    <Image
+                                                        {...{
+                                                            url,
+                                                            alt: idx + 1,
+                                                        }}
+                                                    />
+                                                </a>
+                                            )
+                                        })}
+                                </div>
+                                <div className="flex flex-col gap-[2.125rem]">
+                                    {galleryImagesPaths
+                                        .filter((_, idx) => idx > 8)
+                                        .map(({ url }, idx) => {
+                                            return (
+                                                <a
+                                                    href={url}
+                                                    className="aspect-[2/3]"
+                                                >
+                                                    <Image
+                                                        {...{
+                                                            url,
+                                                            alt: idx + 1,
+                                                        }}
+                                                    />
+                                                </a>
+                                            )
+                                        })}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
+
+                {/* page title side */}
                 <div className="h-screen bg-off-white sticky">
-                    <div className="absolute top-[1.875rem] right-[2vw]">
+                    <div
+                        ref={awwwards}
+                        className="absolute top-[1.875rem] right-[2vw] opacity-0"
+                    >
                         <p className="font-title text-right">AWWWARDS</p>
                         <p>E-commerce of the Year ‘17, ‘18, ‘19 & ‘21</p>
                     </div>
                     <div className="pt-[24.5vh] pr-[5vw] pb-[3.75rem] pl-[4vw] flex flex-col justify-between h-full">
                         <h1 className="overflow-hidden">
-                            <div className="uppercase font-header leading-header tracking-header text-header">
+                            <div
+                                onAnimationEnd={onAnimationEnd}
+                                className="uppercase font-header leading-header tracking-header text-header"
+                            >
                                 <div className="animate-slide-to-top">
                                     we build
                                 </div>
@@ -98,12 +152,18 @@ function App() {
                                 <div className="ml-1ch animate-slide-to-top">
                                     flagship
                                 </div>
-                                <div className="animate-slide-to-top">
+                                <div
+                                    ref={lastAnimatedWord}
+                                    className="animate-slide-to-top"
+                                >
                                     stores
                                 </div>
                             </div>
                         </h1>
-                        <div className="max-w-xs ml-auto">
+                        <div
+                            className="max-w-xs ml-auto opacity-0"
+                            ref={aboutUs}
+                        >
                             <p className="font-subheader text-[28px] leading-[1.05]">
                                 We believe our industry is blinded by numbers.
                                 While buying decisions are based on emotion.
