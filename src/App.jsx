@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { Image } from './Components/Image'
 
 function App() {
     const [galleryImagesPaths, setGalleryImagesPaths] = useState([])
+    const [isGalleryLoading, setIsGalleryLoading] = useState(true)
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetch('http://127.0.0.1/gallery/')
@@ -45,26 +47,26 @@ function App() {
                 </a>
             </header>
             <div className="grid grid-cols-2 h-screen gap-[2.125rem] bg-white">
-                <div className="grid grid-cols-2 overflow-scroll no-scrollbar">
-                    <div className="flex flex-col">
+                <div className="grid grid-cols-2 overflow-scroll no-scrollbar gap-[2.125rem]">
+                    <div className="flex flex-col gap-[2.125rem]">
                         {galleryImagesPaths
                             .filter((_, idx) => idx < 9)
                             .map(({ url }, idx) => {
                                 return (
-                                    <a href={url} className="aspect-[2/3]">
-                                        <img src={url} alt={`${idx + 1}`} />
+                                    <a href={url} className="aspect-[3/4]">
+                                        <Image {...{ url, alt: idx + 1 }} />
                                     </a>
                                 )
                             })}
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-[2.125rem]">
                         {galleryImagesPaths
                             .filter((_, idx) => idx > 8)
                             .map(({ url }, idx) => {
                                 return (
-                                    <div className="aspect-[2/3]">
-                                        <img src={url} alt={`${idx + 1}`} />
-                                    </div>
+                                    <a href={url} className="aspect-[2/3]">
+                                        <Image {...{ url, alt: idx + 1 }} />
+                                    </a>
                                 )
                             })}
                     </div>
