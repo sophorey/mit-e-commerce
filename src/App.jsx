@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
+import { GalleryColumn } from './Components/GalleryColumn'
 import { Image } from './Components/Image'
 
 function App() {
-    const [galleryImagesPaths, setGalleryImagesPaths] = useState([])
+    const [images, setImages] = useState([])
     const [isGalleryLoading, setIsGalleryLoading] = useState(true)
     const gallerySide = useRef(null)
     const page = useRef(null)
     const lastAnimatedWord = useRef(null)
     const awwwards = useRef(null)
     const aboutUs = useRef(null)
-    const [isWebPageTitleAnimationPlayed, setIsWebPageTitleAnimationPlayed] =
-        useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -23,15 +22,13 @@ function App() {
         setIsGalleryLoading(true)
         fetchData()
             .then((response) => {
-                setGalleryImagesPaths(response)
+                setImages(response)
             })
             .catch(console.error)
             .finally(() => {
                 setIsGalleryLoading(false)
             })
     }, [])
-
-    useEffect(() => {}, [isWebPageTitleAnimationPlayed])
 
     function onAnimationEnd(e) {
         if (e.target === lastAnimatedWord.current) {
@@ -85,44 +82,14 @@ function App() {
                             className="hidden overflow-hidden"
                         >
                             <div className="grid grid-cols-2 gap-[2.125rem] ">
-                                <div className="flex flex-col gap-[2.125rem]">
-                                    {galleryImagesPaths
-                                        .filter((_, idx) => idx < 9)
-                                        .map(({ url }, idx) => {
-                                            return (
-                                                <a
-                                                    href={url}
-                                                    className="aspect-[3/4]"
-                                                >
-                                                    <Image
-                                                        {...{
-                                                            url,
-                                                            alt: idx + 1,
-                                                        }}
-                                                    />
-                                                </a>
-                                            )
-                                        })}
-                                </div>
-                                <div className="flex flex-col gap-[2.125rem]">
-                                    {galleryImagesPaths
-                                        .filter((_, idx) => idx > 8)
-                                        .map(({ url }, idx) => {
-                                            return (
-                                                <a
-                                                    href={url}
-                                                    className="aspect-[2/3]"
-                                                >
-                                                    <Image
-                                                        {...{
-                                                            url,
-                                                            alt: idx + 1,
-                                                        }}
-                                                    />
-                                                </a>
-                                            )
-                                        })}
-                                </div>
+                                <GalleryColumn
+                                    images={images.filter((_, idx) => idx < 9)}
+                                    aspectRatio="[3/4]"
+                                />
+                                <GalleryColumn
+                                    images={images.filter((_, idx) => idx > 8)}
+                                    aspectRatio="[2/3]"
+                                />
                             </div>
                         </div>
                     </div>
