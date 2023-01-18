@@ -4,17 +4,25 @@ import { Image } from './Components/Image'
 function App() {
     const [galleryImagesPaths, setGalleryImagesPaths] = useState([])
     const [isGalleryLoading, setIsGalleryLoading] = useState(true)
+
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetch('http://127.0.0.1/gallery/')
+            const data = await fetch(
+                `${process.env.REACT_APP_BACKEND_URL}/gallery/`
+            )
             return data.json()
         }
+        console.log(process.env.REACT_APP_BACKEND_URL)
 
+        setIsGalleryLoading(true)
         fetchData()
             .then((response) => {
                 setGalleryImagesPaths(response)
             })
             .catch(console.error)
+            .finally(() => {
+                setIsGalleryLoading(false)
+            })
     }, [])
     return (
         <div className="bg-off-white">
@@ -47,30 +55,32 @@ function App() {
                 </a>
             </header>
             <div className="grid grid-cols-2 h-screen gap-[2.125rem] bg-white">
-                <div className="grid grid-cols-2 overflow-scroll no-scrollbar gap-[2.125rem]">
-                    <div className="flex flex-col gap-[2.125rem]">
-                        {galleryImagesPaths
-                            .filter((_, idx) => idx < 9)
-                            .map(({ url }, idx) => {
-                                return (
-                                    <a href={url} className="aspect-[3/4]">
-                                        <Image {...{ url, alt: idx + 1 }} />
-                                    </a>
-                                )
-                            })}
+                {!isGalleryLoading && (
+                    <div className="grid grid-cols-2 overflow-scroll no-scrollbar gap-[2.125rem]">
+                        <div className="flex flex-col gap-[2.125rem]">
+                            {galleryImagesPaths
+                                .filter((_, idx) => idx < 9)
+                                .map(({ url }, idx) => {
+                                    return (
+                                        <a href={url} className="aspect-[3/4]">
+                                            <Image {...{ url, alt: idx + 1 }} />
+                                        </a>
+                                    )
+                                })}
+                        </div>
+                        <div className="flex flex-col gap-[2.125rem]">
+                            {galleryImagesPaths
+                                .filter((_, idx) => idx > 8)
+                                .map(({ url }, idx) => {
+                                    return (
+                                        <a href={url} className="aspect-[2/3]">
+                                            <Image {...{ url, alt: idx + 1 }} />
+                                        </a>
+                                    )
+                                })}
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-[2.125rem]">
-                        {galleryImagesPaths
-                            .filter((_, idx) => idx > 8)
-                            .map(({ url }, idx) => {
-                                return (
-                                    <a href={url} className="aspect-[2/3]">
-                                        <Image {...{ url, alt: idx + 1 }} />
-                                    </a>
-                                )
-                            })}
-                    </div>
-                </div>
+                )}
                 <div className="h-screen bg-off-white sticky">
                     <div className="absolute top-[1.875rem] right-[2vw]">
                         <p className="font-title text-right">AWWWARDS</p>
