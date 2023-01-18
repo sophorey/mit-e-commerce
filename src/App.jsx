@@ -45,7 +45,7 @@ function App() {
                 </a>
             </header>
             <div className="grid grid-cols-2 h-screen gap-[2.125rem] bg-white">
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 overflow-scroll no-scrollbar">
                     <div className="flex flex-col">
                         {galleryImagesPaths
                             .filter((_, idx) => idx < 9)
