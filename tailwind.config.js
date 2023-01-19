@@ -17,8 +17,8 @@ module.exports = {
                 white: 'white',
             },
             aspectRatio: {
-                '3/4': '3/4',
-                '2/3': '2/3',
+                '3/4': '3 / 4',
+                '2/3': '2 / 3',
             },
             keyframes: ({ theme }) => ({
                 'slide-to-top': {
@@ -59,7 +59,7 @@ module.exports = {
                 'slide-to-top':
                     'slide-to-top 2s cubic-bezier(0.76, 0, 0.24, 1) 500ms 1 normal both',
                 'off-white-to-white':
-                    'off-white-to-white 0s linear 0s 1 normal forwards;',
+                    'off-white-to-white 1s linear 0s 1 normal forwards;',
                 fadein: 'fadein 1s linear 0s 1 normal both',
             },
         },

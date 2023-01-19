@@ -84,11 +84,11 @@ function App() {
                             <div className="grid grid-cols-2 gap-[2.125rem] ">
                                 <GalleryColumn
                                     images={images.filter((_, idx) => idx < 9)}
-                                    aspectRatio="[3/4]"
+                                    aspectRatio="3/4"
                                 />
                                 <GalleryColumn
                                     images={images.filter((_, idx) => idx > 8)}
-                                    aspectRatio="[2/3]"
+                                    aspectRatio="2/3"
                                 />
                             </div>
                         </div>
