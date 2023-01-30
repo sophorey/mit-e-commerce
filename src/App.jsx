@@ -1,15 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
+import { Gallery } from './Components/Gallery'
 import { GalleryColumn } from './Components/GalleryColumn'
-import { Image } from './Components/Image'
+import { useScrollPosition } from './hooks/useScrollPosition'
 
 function App() {
     const [images, setImages] = useState([])
     const [isGalleryLoading, setIsGalleryLoading] = useState(true)
     const gallerySide = useRef(null)
     const page = useRef(null)
-    const lastAnimatedWord = useRef(null)
     const awwwards = useRef(null)
     const aboutUs = useRef(null)
+    const header = useRef(null)
+    const scrollable = useRef(null)
+
+    function animate() {
+        gallerySide.current.classList.remove('hidden')
+        header.current.classList.add('animate-fadein')
+        gallerySide.current.classList.add('animate-fadein')
+        awwwards.current.classList.add('animate-fadein')
+        aboutUs.current.classList.add('animate-fadein')
+        page.current.classList.add('animate-off-white-to-white')
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,7 +29,6 @@ function App() {
             )
             return data.json()
         }
-
         setIsGalleryLoading(true)
         fetchData()
             .then((response) => {
@@ -31,17 +41,14 @@ function App() {
     }, [])
 
     function onAnimationEnd(e) {
-        if (e.target === lastAnimatedWord.current) {
-            gallerySide.current.classList.remove('hidden')
-            gallerySide.current.classList.add('animate-fadein')
-            awwwards.current.classList.add('animate-fadein')
-            aboutUs.current.classList.add('animate-fadein')
-            page.current.classList.add('animate-off-white-to-white')
-        }
+        animate()
     }
     return (
         <div className="bg-off-white">
-            <header className="fixed px-[2vw] py-[1.875rem] w-full">
+            <header
+                ref={header}
+                className="fixed px-[2vw] py-[1.875rem] w-full z-10 opacity-0"
+            >
                 <a href="/" className="contents">
                     <svg
                         id="Layer_1"
@@ -76,23 +83,11 @@ function App() {
             >
                 {/* gallery side */}
                 {!isGalleryLoading && (
-                    <div className="overflow-scroll no-scrollbar">
-                        <div
-                            ref={gallerySide}
-                            className="hidden overflow-hidden"
-                        >
-                            <div className="grid grid-cols-2 gap-[2.125rem] ">
-                                <GalleryColumn
-                                    images={images.filter((_, idx) => idx < 9)}
-                                    aspectRatio="3/4"
-                                />
-                                <GalleryColumn
-                                    images={images.filter((_, idx) => idx > 8)}
-                                    aspectRatio="2/3"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Gallery
+                        scrollable={scrollable}
+                        gallerySide={gallerySide}
+                        images={images}
+                    />
                 )}
 
                 {/* page title side */}
@@ -106,10 +101,7 @@ function App() {
                     </div>
                     <div className="pt-[24.5vh] pr-[5vw] pb-[3.75rem] pl-[4vw] flex flex-col justify-between h-full">
                         <h1 className="overflow-hidden">
-                            <div
-                                onAnimationEnd={onAnimationEnd}
-                                className="uppercase font-header leading-header tracking-header text-header"
-                            >
+                            <div className="uppercase font-header leading-header tracking-header text-header">
                                 <div className="animate-slide-to-top">
                                     we build
                                 </div>
@@ -120,7 +112,7 @@ function App() {
                                     flagship
                                 </div>
                                 <div
-                                    ref={lastAnimatedWord}
+                                    onAnimationEnd={onAnimationEnd}
                                     className="animate-slide-to-top"
                                 >
                                     stores

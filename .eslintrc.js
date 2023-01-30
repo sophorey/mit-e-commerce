@@ -29,5 +29,6 @@ module.exports = {
         'no-return-assign': 0,
         'no-plusplus': 1,
         'no-console': 0,
+        'consistent-return': 0,
     },
 }

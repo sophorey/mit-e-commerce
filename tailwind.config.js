@@ -88,6 +88,9 @@ module.exports = {
         fontSize: {
             header: '10vmin',
         },
+        maxWidth: {
+            gallerySide: 'calc(50% - 1.0625rem)',
+        },
     },
     plugins: [],
 }

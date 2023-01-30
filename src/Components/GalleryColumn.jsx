@@ -6,6 +6,7 @@ export function GalleryColumn({ images, aspectRatio }) {
             {images.map(({ compressed, id }, idx) => {
                 return (
                     <a
+                        key={id}
                         href={compressed}
                         className={`aspect-${aspectRatio} block h-full`}
                     >
